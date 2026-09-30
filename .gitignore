@@ -1,0 +1,11 @@
+# Data - download instructions are in README
+data/
+data_source/
+
+# Secrets - never commit credentials
+.env
+credentials/
+*service-account*.json
+
+# Mac system files
+.DS_Store
