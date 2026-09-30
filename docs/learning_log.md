@@ -21,7 +21,7 @@
 ### Decisions I made and why
 - Set up GitHub repository first: I decided to set up the GitHub repository before starting the analysis because I thought it would be clearer to establish the project documentation and structure before moving into the analysis
 - Rejected `customer_segment` as a loyalty tier: a pivot table showed almost identical values across all four segments. Average loyalty points ranged only from 102.7 to 104.5, and average CLV from 8,878 to 9,037. VIP customers did not score higher than Consumer, so I decided not to use this variable as a measure of loyalty
-- Defined a loyalty by frequency rather than CLV: CLV increases with discount-driven spending, which could make the analysis for Q3 circular. I therefore decided to use purchase frequency as the basis for measuring loyalty
+- Defined loyalty by frequency rather than CLV: CLV increases with discount-driven spending, which could make the analysis for Q3 circular. I therefore decided to use purchase frequency as the basis for measuring loyalty
 - Counted orders myself: The `customer_order_count` field did not match the actual number of orders (e.g. there are only 4 orders for CUST-000007 in the data source but in the `customer_order_count` column it shows 6), so I decided to calculate the order count myself rather than relying on the provided metric
 - Kept the synthetic dataset: Public datasets rarely include the product cost and discount information needed for this analysis, so I decided to continue using a synthetic dataset
 - Uploaded native tables instead of connecting directly to Google Sheets: I chose to upload native tables to BigQuery because this approach is more stable and provides better performance
