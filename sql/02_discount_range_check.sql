@@ -3,6 +3,8 @@
 --         plus the number of full-price lines (the 0% baseline band)
 -- Outcome: discounts range from 0% to 60%; 51,476 of 397,569 lines (12.9%)
 --          are at full price, which is enough for a reliable baseline
+-- Note: a "line" = one product in an order (one row in order_items)
+
 
 SELECT
 MIN(discount_percentage) AS min_discount

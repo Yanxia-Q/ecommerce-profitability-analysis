@@ -5,6 +5,8 @@
 --          10-point bands chosen over 5-point: easier to read in a chart, more lines per band (more stable averages).
 --          Trade-off: the threshold can only be located within 10 points.
 --          If more precision is needed, we can then zoom in with 5% bands.
+-- Note: a "line" = one product in an order (one row in order_items)
+
 
 SELECT
 CASE
