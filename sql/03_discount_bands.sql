@@ -1,7 +1,8 @@
 -- Purpose: put each line in order_items into a discount band, and check if every band has enough lines to be reliable
 -- Method: 0% (full price) as its own band, then 10-point bands up to 60%;
 --         lower bound included (e.g. 10% falls in 10%-20%), 60% included in the last band, then count the number of lines in each band
--- Outcome: all 397,569 lines assigned (no 'unassigned'); smallest band is 50%-60% with 7,435 lines, so all bands are reliable.
+-- Outcome: all 397,569 lines assigned (no 'unassigned');
+--          smallest band is 50%-60% with 7,435 lines, so all bands are reliable.
 --          10-point bands chosen over 5-point: easier to read in a chart, more lines per band (more stable averages).
 --          Trade-off: the threshold can only be located within 10 points.
 --          If more precision is needed, we can then zoom in with 5% bands.
