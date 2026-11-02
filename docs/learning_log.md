@@ -1,6 +1,6 @@
 # Learning Log
 
-## Phase 1 — Data setup (2026-09-30)
+## Phase 1 — Data setup
 
 ### What I did
 
@@ -30,3 +30,52 @@
 - Some Git commands and their purposes, for example, what git push -u does
 - How to structure a project in GitHub, including files such as .gitignore
 - How to prepare and structure a README file
+
+
+
+## Phase 2 — Q1: Discount vs. profitability
+
+### What I did
+- Found that the dataset's `profit` column counts tax as profit; defined my own contribution margin (gross sales − discount − product cost − shipping) and treated shipping as a business cost
+- Defined the metrics for Q1: discount bands, units per line, contribution margin per unit and per line
+- Checked the discount range and built 10-point discount bands in BigQuery
+- Calculated profitability per band, then challenged the result with a product-mix check
+- Joined `order_items` with `sales_customer_analytics` to keep only completed orders, and found a data artefact in cancelled/returned orders
+- Wrote up the finding, limitations and recommendations in `docs/q1_discount_analysis.md`
+
+### What I learned
+
+**Discount threshold vs. discount band**
+- *Discount threshold* = the answer I'm looking for: the discount level where something changes.
+- *Discount band* = the tool I use to find it: discounts grouped into ranges.
+
+**From revenue to net profit (CM1 / CM2 / CM3)**
+
+    Net revenue (after discounts and returns)
+    – Product cost (COGS)
+    = CM1 (≈ gross profit)
+    – Fulfilment: shipping, packaging, warehouse picking, payment fees (~2–3%), returns handling
+    = CM2  ← closest to what this project calculates
+    – Marketing / advertising (often the biggest cost in e-commerce)
+    = CM3
+    – Fixed costs: salaries, software/tech, rent, admin
+    = EBITDA (operating profit)
+    – Depreciation, interest, corporate tax
+    = NET PROFIT
+
+- **EBITDA** = Earnings Before Interest, Taxes, Depreciation and Amortisation: profit from running the business day to day.
+- **Depreciation** (折旧): the decrease in value of a tangible asset over time (e.g. cars, buildings, machinery) due to wear and tear, age or becoming outdated.
+- **Amortisation** (摊销): spreading the cost of an intangible asset (e.g. patents, software, licences) over its useful life. Also used for paying off a loan gradually (分期偿还).
+
+**SQL and analysis skills**
+- `CASE WHEN` to create bands, with `ELSE 'unassigned'` to catch gaps
+- `GROUP BY`, `COUNT(*)` vs `COUNT(DISTINCT …)`, `COUNTIF`, `ROUND` (only for display)
+- `INNER JOIN` vs `LEFT JOIN`, `ON` vs `USING`, and how to check that a join doesn't lose or duplicate rows
+- `WHERE` (filters rows) vs `HAVING` (filters groups)
+- Always ask "% of what?" and "compared with what?"
+
+### What I found confusing
+- I didn't check how discounts differ by order status at the start. That's why the 0% band collapsed when I filtered to completed orders, and I had to investigate it afterwards.
+
+### Decisions I would do differently
+- Decide which rows to exclude (e.g. cancelled, returned, and pending orders) at the beginning of the analysis, rather than at the end. In this case, filtering the data too late meant having to redo the Q1 analysis, only to discover that most of the orders in the 0% band were cancelled or returned.
