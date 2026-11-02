@@ -7,6 +7,7 @@
 --          Note: discounts under 20% don't increase units at all, but this data only shows units per purchase. Small discounts might still bring in more orders or new customers, which we can't measure here.
 --          Check: avg units per line × CM per unit ≈ CM per line (differences due to rounding only)
 -- Note: a "line" = one product in an order (one row in order_items)
+--       Currency: amounts are treated as USD (7 currency labels in the data, never converted; USD is the most common).
 
 -- Definitions:
 --contribution margin = gross_sales - discount_amount - shipping_cost - product_cost
