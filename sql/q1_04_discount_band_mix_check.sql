@@ -1,5 +1,5 @@
 -- Purpose: check apart from the discount, if the unit price, product cost, and shipping cost are different for different discount bands and if they affect profitability in each band
--- Method: calculate average unit price, cost per unit and average shipping cost per line for each discount band (same discount bands as 03_discount_bands.sql), then compare to the 0% baseline
+-- Method: calculate average unit price, cost per unit and average shipping cost per line for each discount band (same discount bands as q1_02_discount_bands.sql), then compare to the 0% baseline
 -- Outcome: unit price (243–247), cost per unit (124–127) and shipping per line (6.6–8.6) are nearly identical across bands, so they do not explain the profit decline; the discount is the main driver.
 --          Not ruled out: factors outside the data, e.g. timing (sales events) or marketing campaigns.
 -- Note: a "line" = one product in an order (one row in order_items)

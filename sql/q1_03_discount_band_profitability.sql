@@ -1,5 +1,5 @@
 -- Purpose: check when we give discounts, how many units are sold per line, and how much contribution margin is earned per unit and per line
--- Method: Calculate contribution margin per unit and per line for each discount band (Same discount bands as 03_discount_bands.sql), then compare to the 0% baseline
+-- Method: Calculate contribution margin per unit and per line for each discount band (Same discount bands as q1_02_discount_bands.sql), then compare to the 0% baseline
 -- Outcome: No discount level earns as much profit per purchase as selling at full price.
 --          Discounts of 20–30% partly offset the loss, as customers buy 26% more units per purchase.
 --          But above 40%, profit per purchase drops by around 90% compared with full price, and discounts above 50% make every purchase unprofitable.

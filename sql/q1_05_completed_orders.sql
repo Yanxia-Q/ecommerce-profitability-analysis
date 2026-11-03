@@ -6,7 +6,7 @@
 --           actually earned). Trade-off: pending orders are likely the most recent ones (~5% of orders).
 -- Note: a "line" = one product in an order (one row in order_items).
 --       All money and quantity columns are taken from order_items (i.), our source of truth.
---       Same discount bands as 03_discount_bands.sql.
+--       Same discount bands as q1_02_discount_bands.sql.
 --       Currency: amounts are treated as USD. The data labels orders in 7 currencies but never converts
 --       them (average order values are the same in every currency), so the values behave as one currency.
 --       USD is the most common label (~60% of orders) and is used in the dataset's own summary file.
@@ -20,7 +20,7 @@
 --   2. Data artefact found: 93% of lines in cancelled and returned orders are at 0% discount,
 --      vs ~1% in completed and pending orders. The extreme, near-identical pattern for cancelled
 --      and returned orders points to a rule in the synthetic data, not real customer behaviour.
---      As a result, 93% of the 0% band in 04_discount_band_profitability.sql came from cancelled
+--      As a result, 93% of the 0% band in q1_03_discount_band_profitability.sql came from cancelled
 --      or returned orders. This file (completed orders only) is the version to use for Q1.
 --   3. Among completed orders, only ~1% of lines sell at full price: almost every real sale is discounted.
 --      The 0% band still has 3,441 lines, enough for a reliable baseline.
@@ -89,7 +89,7 @@ ORDER BY discount_band;
 -- 30%-40%            21,740        3.30               31.73       104.83
 -- 40%-50%            17,062        3.32                6.71        22.30
 -- 50%-60%             6,977        3.30              -21.60       -71.27
--- Compared with 04_discount_band_profitability.sql (all orders): CM per line changes by < USD 1 in every band.
+-- Compared with q1_03_discount_band_profitability.sql (all orders): CM per line changes by < USD 1 in every band.
 -- But the 0% band shrinks from 51,476 to 3,441 lines (-93%); other bands shrink by only ~6-7%.
 
 

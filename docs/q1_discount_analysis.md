@@ -112,11 +112,11 @@ Amounts are treated as **USD**. The data labels orders in 7 currencies but never
 
 | File | What it does | Result |
 |---|---|---|
-| 02_discount_range_check | Full discount range in order_items | 0% to 60% |
-| 03_discount_bands | Assign each line to a band, count lines | All lines assigned; smallest band 7,435 lines |
-| 04_discount_band_profitability | Units and CM per band (all orders) | First version of the finding |
-| 05_discount_band_mix_check | Price, cost and shipping per band | Nearly identical across bands |
-| 06_q1_completed_orders | Join check, order statuses, Q1 rerun on completed orders | Final version: the one to quote |
+| q1_01_discount_range_check | Full discount range in order_items | 0% to 60% |
+| q1_02_discount_bands | Assign each line to a band, count lines | All lines assigned; smallest band 7,435 lines |
+| q1_03_discount_band_profitability | Units and CM per band (all orders) | First version of the finding |
+| q1_04_discount_band_mix_check | Price, cost and shipping per band | Nearly identical across bands |
+| q1_05_completed_orders | Join check, order statuses, Q1 rerun on completed orders | Final version: the one to quote |
 
 ---
 
