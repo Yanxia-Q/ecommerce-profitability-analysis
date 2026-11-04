@@ -24,11 +24,11 @@ Business question → Metric → Data → Method → Finding → Interpretation 
 |---|---|---|---|
 | Discount band | Check the actual discount range, then define bands: 0% on its own, then 10-point bands up to 60% (lower bound included) | order_items | discount_percentage |
 | Average units per line | AVG(quantity) per band | order_items | quantity |
-| Contribution margin (CM) per unit | SUM(CM) ÷ SUM(quantity) per band | order_items | gross_sales, discount_amount, shipping_cost, product_cost, quantity |
-| Contribution margin (CM) per line | SUM(CM) ÷ COUNT(*) per band | order_items | gross_sales, discount_amount, shipping_cost, product_cost |
+| Contribution margin (CM) per unit | SUM(gross_sales − discount_amount − product_cost − shipping_cost) ÷ SUM(quantity), per band | order_items | gross_sales, discount_amount, shipping_cost, product_cost, quantity |
+| Contribution margin (CM) per line | SUM(gross_sales − discount_amount − product_cost − shipping_cost) ÷ COUNT(*), per band | order_items | gross_sales, discount_amount, shipping_cost, product_cost |
 | Order status filter | Keep only completed orders | sales_customer_analytics (joined on order_id) | order_status |
 
-**Contribution margin** = gross_sales − discount_amount − shipping_cost − product_cost
+**Contribution margin** = gross_sales − discount_amount − product_cost − shipping_cost
 **Check:** avg units per line × CM per unit ≈ CM per line (small differences = rounding only)
 
 ---
