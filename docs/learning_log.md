@@ -79,3 +79,36 @@
 
 ### Decisions I would do differently
 - Decide which rows to exclude (e.g. cancelled, returned, and pending orders) at the beginning of the analysis, rather than at the end. In this case, filtering the data too late meant having to redo the Q1 analysis, only to discover that most of the orders in the 0% band were cancelled or returned.
+
+## Phase 3 — Q2: Revenue vs. true profitability
+
+### What I did
+- Excluded cancelled, returned and pending orders from the start (lesson from Q1)
+- Checked that joining `product_catalog` would not duplicate or lose any lines
+- Calculated revenue, contribution margin and CM % by category, and each category's share of revenue vs share of CM
+- Tested why the four largest categories are less profitable: discounts, product cost or shipping
+- Compared each brand with its own category's CM %, and flagged brands with high revenue but clearly lower profit
+- Wrote up the findings and a recommendation in `docs/q2_revenue_vs_profit_analysis.md`
+
+### What I learned
+
+**Choosing thresholds and testing their sensitivity**
+- Words like "high revenue" or "little profit" have no meaning until I define them with a number, and that number is a judgement call.
+- A method to make the judgement defensible: purpose → measure → reference point → check the data → test sensitivity → document.
+  - *Reference point:* each category has about 10 brands, so "high revenue" = more than 10% of the category (bigger than an average brand).
+  - *Check the data:* the middle half of brands are between −2.7 and +2.3 points from their category, so −3 points is just outside the normal range.
+  - *Test sensitivity:* change one threshold at a time and see how many brands are flagged (8% / 10% / 12% → 16 / 13 / 6 brands).
+- The brands that stay flagged under every version (Castrol, Gerber, Hasbro) are the findings I can state with confidence. The others depend on where the line is drawn, which belongs in the limitations.
+- Flags must be calculated on unrounded numbers: Pure Vitamin's gap shows as −0.03 but is really −0.0302.
+
+**Other things I learned**
+- Comparing brands within their own category, because categories have very different normal margins.
+- Window functions (`SUM(...) OVER (PARTITION BY ...)`) and CTEs (`WITH ... AS`) to build a query in readable steps.
+- Percentage points vs percent: 30.2% − 24.9% = 5.3 points, which is a 17.5% relative difference.
+- My first hypothesis (discounts explain the low margins) was wrong: discount rates are the same in every category, and product cost is the real cause.
+
+### What I found confusing
+- How to choose a threshold that isn't just a random number, and how to explain it to someone else.
+
+### Decisions I would do differently
+- Write down each threshold with its reason and test its sensitivity as soon as I define it, instead of adding the justification afterwards.
