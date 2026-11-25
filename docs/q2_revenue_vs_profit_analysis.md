@@ -5,6 +5,8 @@
 
 **In plain words:** Some categories and brands look important because they sell a lot. Do they also keep a fair share of profit, or does most of their revenue go to discounts, suppliers and shipping?
 
+**Why the business cares:** managers often judge categories and brands by revenue, and the biggest sellers usually get the most attention: marketing budget, stock, homepage space. But a big seller isn't necessarily a big earner. If a large part of revenue comes from products that keep little profit, the business may be investing in growth that barely pays. Q2 shows where revenue and profit don't match, and what causes the gap, so the business knows where to act (e.g. supplier negotiations, shipping rules).
+
 ---
 
 ## 2. Metrics

@@ -14,6 +14,8 @@ Business question → Metric → Data → Method → Finding → Interpretation 
 
 **In plain words:** When we give a bigger discount, we earn less on each unit, but customers buy more units. Which effect wins? At what discount level does extra volume stop making up for lost margin?
 
+**Why the business cares:** discounts are the quickest way to increase sales, and the effect is easy to see: more orders, more units, more revenue. The cost is harder to see: every discount reduces the profit kept on each unit. If the business doesn't know where extra volume stops paying for the lower margin, it can grow sales while quietly losing profit. Q1 finds how far discounts can go before they hurt profitability.
+
 ---
 
 ## 3. Metrics
