@@ -88,6 +88,16 @@ ORDER BY product_category, net_revenue DESC;
 -- Sports & Outdoors       Adidas         0.160                      0.340   0.376            -0.036
 -- Toys & Games            Hasbro         0.145                      0.362   0.424            -0.062
 --
--- Sensitivity (number of brands flagged):
---   revenue share threshold 8% / 10% / 12%  -> 16 / 13 / 6 brands (gap threshold -3 points)
---   gap threshold -2 / -3 / -5 points        -> 21 / 13 / 7 brands (revenue share threshold 10%)
+-- Sensitivity check: would the list change if the two thresholds were set slightly differently?
+-- The thresholds (10% of category revenue, 3 points below the category) are judgement calls,
+-- so each one was changed on its own, keeping the other one fixed, to see how many brands get flagged:
+--
+--   "High revenue" = more than 8% / 10% / 12% of the category      -> 16 / 13 / 6 brands flagged
+--   (profit rule kept at: more than 3 points below the category)
+--
+--   "Little profit" = more than 2 / 3 / 5 points below the category -> 21 / 13 / 7 brands flagged
+--   (revenue rule kept at: more than 10% of the category)
+--
+-- What it means: the number of flagged brands depends on where the line is drawn (13 is our chosen definition),
+-- but Castrol, Gerber and Hasbro are flagged under every version tested, so they are the most reliable findings.
+-- To rerun with other values, change the numbers in the two DECLARE lines at the top of this file.

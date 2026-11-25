@@ -74,14 +74,15 @@ A brand is **flagged** when **both** conditions are true:
 
 - *Percentage points vs percent:* a gap of 30.2% − 24.9% = 5.3 percentage points (a 17.5% relative difference). Gaps are always stated in percentage points.
 - *Flags use unrounded values:* rounding can hide a brand just past a threshold (Pure Vitamin's gap is −0.0302, displayed as −0.03).
-- *Sensitivity check:*
+**Sensitivity check: would the list change with slightly different thresholds?**
+Both thresholds are judgement calls, so each one was changed on its own (keeping the other fixed) to see how many brands get flagged:
 
-| Threshold tested | Brands flagged |
-|---|---:|
-| Revenue share 8% / **10%** / 12% (gap −3 points) | 16 / **13** / 6 |
-| Gap −2 / **−3** / −5 points (revenue share 10%) | 21 / **13** / 7 |
+| What was changed | Looser | **Our choice** | Stricter |
+|---|---:|---:|---:|
+| "High revenue": more than … of the category's revenue *(profit rule kept at 3 points)* | 8% → 16 brands | **10% → 13 brands** | 12% → 6 brands |
+| "Little profit": more than … points below the category *(revenue rule kept at 10%)* | 2 points → 21 brands | **3 points → 13 brands** | 5 points → 7 brands |
 
-Castrol, Gerber and Hasbro are flagged under every combination tested.
+**What it means:** the exact number of flagged brands depends on where the line is drawn, so "13 brands" is the result of our definitions, not a fixed fact. But **Castrol, Gerber and Hasbro are flagged in every version tested**, so they are the most reliable findings.
 
 ---
 
