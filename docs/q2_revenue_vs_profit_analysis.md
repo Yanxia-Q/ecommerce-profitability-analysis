@@ -17,6 +17,9 @@
 | Contribution margin (CM) | SUM(gross_sales − discount_amount − product_cost − shipping_cost) | order_items | gross_sales, discount_amount, product_cost, shipping_cost |
 | CM % | CM ÷ net revenue | order_items | (as above) |
 | Share of revenue / share of CM | Category revenue (or CM) ÷ total revenue (or CM) of all categories | calculated in Google Sheets | — |
+| Category CM % (brand benchmark) | Category CM ÷ category net revenue, shown next to each brand | window function in SQL | (as CM) |
+| CM % gap (brands) | Brand CM % − its category's CM %, in percentage points | calculated in SQL | (as CM) |
+| Revenue share in category (brands) | Brand net revenue ÷ its category's net revenue | window function in SQL | gross_sales, discount_amount |
 | Discount rate | SUM(discount_amount) ÷ SUM(gross_sales) | order_items | discount_amount, gross_sales |
 | Product cost % | SUM(product_cost) ÷ SUM(gross_sales − discount_amount) | order_items | product_cost, gross_sales, discount_amount |
 | Shipping cost % | SUM(shipping_cost) ÷ SUM(gross_sales − discount_amount) | order_items | shipping_cost, gross_sales, discount_amount |
@@ -58,6 +61,28 @@ Q2 joins three tables: `order_items` (numbers), `product_catalog` (category and 
 ### 3.4 Currency
 Amounts are treated as **USD**. The data labels orders in 7 currencies but never converts them (average order values are the same in every currency). USD is the most common label (~60% of orders).
 
+### 3.5 Brand comparison: benchmark against the category
+As normal margins vary significantly across categories (e.g. 25% for Electronics vs. 45% for Grocery), largely due to differences in product costs, cross-category comparisons could be misleading. To ensure a fair assessment, brands are benchmarked against their respective category's CM%. Brands present in two categories are evaluated independently in each category.
+
+### 3.6 Definitions: "high revenue" and "little profit" (brands)
+A brand is **flagged** when **both** conditions are true:
+
+| Term | Definition | Why |
+|---|---|---|
+| **High revenue** | More than **10%** of its category's net revenue | Each category has about 10 brands, so 10% = bigger than an average brand in its category. Share of category (not USD) is used because a USD 300K brand is small in Electronics but large in Books & Media. |
+| **Little profit** | CM % more than **3 percentage points below** its category's CM % (gap < −0.03) | The middle 50% of brands are between −2.7 and +2.3 points from their category's CM %, so −3 points marks a brand as clearly outside the normal range (roughly the weakest quarter). |
+
+- *Percentage points vs percent:* a gap of 30.2% − 24.9% = 5.3 percentage points (a 17.5% relative difference). Gaps are always stated in percentage points.
+- *Flags use unrounded values:* rounding can hide a brand just past a threshold (Pure Vitamin's gap is −0.0302, displayed as −0.03).
+- *Sensitivity check:*
+
+| Threshold tested | Brands flagged |
+|---|---:|
+| Revenue share 8% / **10%** / 12% (gap −3 points) | 16 / **13** / 6 |
+| Gap −2 / **−3** / −5 points (revenue share 10%) | 21 / **13** / 7 |
+
+Castrol, Gerber and Hasbro are flagged under every combination tested.
+
 ---
 
 ## 4. Analysis steps (SQL files on GitHub)
@@ -66,7 +91,7 @@ Amounts are treated as **USD**. The data labels orders in 7 currencies but never
 |---|---|---|
 | q2_01_join_checks | Catalog uniqueness and join completeness | Join is safe: no duplicated or lost lines |
 | q2_02_category_profitability | Revenue, CM and CM % per category; discount, product cost and shipping % per category | Big four categories have the lowest CM %, driven by product cost |
-| *(brand files to be added)* | | |
+| q2_03_brand_profitability | Revenue, CM, CM % per brand vs its category's CM %; revenue share in category; flag | 13 brands flagged; none in Electronics |
 
 ---
 
@@ -123,11 +148,39 @@ Amounts are treated as **USD**. The data labels orders in 7 currencies but never
 - **Shipping hits small, low-priced categories hardest**: Books & Media 10.7% and Grocery 9.0% of revenue, vs 0.6% for Electronics. These categories still have good CM % because their product cost is low.
 
 ### 6.2 Brands
-*(to be added)*
+All 151 brand rows (144 brands, 7 of them in two categories) have at least 556 lines, so every brand is reliable enough to compare.
+
+**13 brands are flagged** (high revenue within their category, CM % more than 3 points below it):
+
+| Category | Brand | Revenue share in category | Brand CM % | Category CM % | Gap (points) |
+|---|---|---:|---:|---:|---:|
+| Automotive | Castrol | 17.5% | 24.9% | 30.2% | −5.3 |
+| Baby & Kids | Gerber | 15.8% | 34.6% | 41.6% | −7.1 |
+| Baby & Kids | Evenflo | 11.2% | 33.0% | 41.6% | −8.6 |
+| Beauty & Personal Care | Clinique | 11.0% | 38.8% | 43.1% | −4.3 |
+| Books & Media | Pearson | 11.5% | 35.1% | 40.4% | −5.3 |
+| Fashion | Zara | 11.1% | 36.2% | 41.0% | −4.8 |
+| Health & Wellness | Pure Vitamin | 10.6% | 34.2% | 37.2% | −3.0 |
+| Home & Kitchen | Wayfair | 14.6% | 34.7% | 39.2% | −4.4 |
+| Jewelry | Tiffany | 10.6% | 26.1% | 32.1% | −6.0 |
+| Pet Supplies | Blue Buffalo | 12.2% | 37.8% | 42.3% | −4.5 |
+| Pet Supplies | Petmate | 11.1% | 36.6% | 42.3% | −5.7 |
+| Sports & Outdoors | Adidas | 16.0% | 34.0% | 37.6% | −3.6 |
+| Toys & Games | Hasbro | 14.5% | 36.2% | 42.4% | −6.2 |
+
+- **Most robust:** Castrol, Gerber and Hasbro are flagged under every threshold tested.
+- **Castrol** is Automotive's largest brand by revenue, but its CM % is 5.3 points below the category, and it earns less CM than Mobil despite higher sales.
+- **No Electronics brand is flagged.** LG and Samsung are about 3 points below the category but have less than 10% of its revenue. The Electronics issue is the whole category's product cost, not one weak brand.
+- **Size of the opportunity:** if all 13 brands reached their category's CM %, CM would rise by about **USD 0.66M** over 2021–2025, i.e. **1.4% of total CM**.
 
 ---
 
 ## 7. Possible actions for the business
+
+### Recommendation: where to focus first
+**Focus first on product cost in the four largest categories.** Because they generate USD 78.75M of net revenue, improving their product cost by just one percentage point would add about USD 0.79M of contribution margin over the period analysed (five years, 2021–2025), which is more than fixing all 13 underperforming brands combined (about USD 0.66M). In practice, this means supplier negotiations with the largest brands in those categories (e.g. OnePlus, Asus, HP in Electronics; Whirlpool, Dyson in Home Appliances).
+
+**Then address the flagged brands as a targeted second list**, starting with Castrol, Gerber and Hasbro, which fall clearly below their category under every threshold tested. Each case is smaller, but specific and quick to investigate.
 
 **Big four categories (high product cost):**
 - Negotiate supplier prices; Electronics alone is 21.6% of revenue, which gives real volume leverage.
@@ -148,3 +201,5 @@ Amounts are treated as **USD**. The data labels orders in 7 currencies but never
 4. Synthetic data: the uniform discount rate (19–20% in every category) likely reflects generation rules rather than real pricing strategy.
 5. The analysis shows *where* margin can be improved and how big the opportunity is, not whether suppliers or logistics partners would accept better terms.
 6. Pending orders are excluded (~5%, likely the most recent), so the latest period is slightly under-represented.
+7. The brand flags depend on two thresholds (10% revenue share, −3 points gap). Only Castrol, Gerber and Hasbro are flagged under every threshold tested; the other flagged brands depend on where the line is drawn.
+8. The analysis does not yet explain *why* each flagged brand underperforms (discounts, product cost or shipping); a per-brand cost-driver check would be the next step.
